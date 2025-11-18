@@ -116,7 +116,7 @@ func pingHarbor(ctx context.Context, ref orasregistryv2.Reference, cred orasregi
 	if !strings.HasPrefix(contentType, "text/plain") {
 		return "", fmt.Errorf("unexpected response content type: [%s]", contentType)
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -147,7 +147,7 @@ func harborProjectExists(ctx context.Context, projectName string, ref orasregist
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -171,7 +171,7 @@ func listHarborProjectRepositories(ctx context.Context, projectName string, ref 
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	switch resp.StatusCode {
 	case http.StatusOK:
@@ -295,7 +295,7 @@ func parseHarborErrorResponse(resp *http.Response) error {
 	}
 
 	// https://codeql.github.com/codeql-query-help/go/go-log-injection/
-	escapedUrl := strings.Replace(resp.Request.URL.String(), "\n", "", -1)
-	escapedUrl = strings.Replace(escapedUrl, "\r", "", -1)
+	escapedUrl := strings.Replace(resp.Request.URL.String(), "\n", "", -1) //nolint:staticcheck
+	escapedUrl = strings.Replace(escapedUrl, "\r", "", -1) //nolint:staticcheck
 	return fmt.Errorf("%s %q: unexpected status code %d: %s", resp.Request.Method, escapedUrl, resp.StatusCode, errmsg)
 }

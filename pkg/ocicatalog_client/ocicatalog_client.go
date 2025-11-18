@@ -24,7 +24,7 @@ func NewClient(ociCatalogAddr string) (ocicatalog.OCICatalogServiceClient, func(
 		return nil, nil, fmt.Errorf("unable to contact OCI Catalog at %q: %+v", ociCatalogAddr, err)
 	}
 
-	closer := func() { conn.Close() }
+	closer := func() { conn.Close() } //nolint:errcheck
 
 	return ocicatalog.NewOCICatalogServiceClient(conn), closer, nil
 }

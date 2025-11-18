@@ -358,17 +358,17 @@ func TestGetProxyConfig(t *testing.T) {
 				originalVal, ok := os.LookupEnv(key)
 				if ok {
 					originalValues[key] = originalVal
-					os.Unsetenv(key)
+					os.Unsetenv(key) //nolint:errcheck
 				}
 
 				value, ok := tc.containerEnvVars[key]
 				if ok {
-					os.Setenv(key, value)
+					os.Setenv(key, value) //nolint:errcheck
 				}
 			}
 			defer func() {
 				for key, val := range originalValues {
-					os.Setenv(key, val)
+					os.Setenv(key, val) //nolint:errcheck
 				}
 			}()
 

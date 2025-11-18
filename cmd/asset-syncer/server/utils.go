@@ -212,7 +212,7 @@ func unescapeOrDefaultValue(value string) string {
 	// https://github.com/vmware-tanzu/kubeapps/pull/3863#pullrequestreview-819141298
 	// and instance of the issue cropping up via Harbor at
 	// https://github.com/vmware-tanzu/kubeapps/issues/5897
-	value = strings.Replace(value, "%2F", "%252F", -1)
+	value = strings.Replace(value, "%2F", "%252F", -1) //nolint:staticcheck
 	unescapedValue, err := url.PathUnescape(value)
 	if err != nil {
 		return value
@@ -465,7 +465,7 @@ func (o *OciAPIClient) IsHelmChart(appName, tag, userAgent string) (bool, error)
 	if err != nil {
 		return false, err
 	}
-	defer rc.Close()
+	defer rc.Close() //nolint:errcheck
 
 	manifestData, err := content.ReadAll(rc, descriptor)
 	if err != nil {
@@ -753,7 +753,7 @@ func orderVersions(versions []string) ([]string, error) {
 
 // Charts retrieve the list of actual charts needing syncing in the repo.
 func (r *OCIRegistry) Charts(ctx context.Context, fetchLatestOnly bool, chartResults chan pullChartResult) ([]string, error) {
-	repoURL, err := parseRepoURL(r.AppRepositoryInternal.URL)
+	repoURL, err := parseRepoURL(r.AppRepositoryInternal.URL) //nolint:staticcheck
 	if err != nil {
 		return nil, err
 	}
@@ -1062,7 +1062,7 @@ func (f *fileImporter) fetchAndImportIcon(c models.Chart, r *models.AppRepositor
 
 	reader, contentType, err := httpclient.GetStream(c.Icon, f.netClient, reqHeaders)
 	if reader != nil {
-		defer reader.Close()
+		defer reader.Close() //nolint:errcheck
 	}
 	if err != nil {
 		return err

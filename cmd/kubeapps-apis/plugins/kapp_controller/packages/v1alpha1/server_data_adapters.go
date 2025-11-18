@@ -398,7 +398,7 @@ func (s *Server) buildPkgInstall(installedPackageName, targetCluster, targetName
 	// Allow this PackageInstall to be downgraded
 	// https://carvel.dev/kapp-controller/docs/v0.32.0/package-consumer-concepts/#downgrading
 	if s.pluginConfig.defaultAllowDowngrades {
-		pkgInstall.ObjectMeta.Annotations[kappctrlpackageinstall.DowngradableAnnKey] = ""
+		pkgInstall.ObjectMeta.Annotations[kappctrlpackageinstall.DowngradableAnnKey] = "" //nolint:staticcheck
 	}
 
 	if reconciliationOptions != nil {

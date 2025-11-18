@@ -60,6 +60,6 @@ func SetupTestDouble(t *testing.T) (string, *OCICatalogDouble, func()) {
 
 	return lis.Addr().String(), catalogDouble, func() {
 		grpcServer.Stop()
-		lis.Close()
+		lis.Close() //nolint:errcheck
 	}
 }

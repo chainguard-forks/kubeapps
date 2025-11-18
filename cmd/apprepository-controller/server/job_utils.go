@@ -246,13 +246,13 @@ func generateJobSpec(apprepo *apprepov1alpha1.AppRepository, config Config, rest
 	// Get the predefined pod spec for the apprepo definition if exists
 	podTemplateSpec := apprepo.Spec.SyncJobPodTemplate
 	// Add labels
-	if len(podTemplateSpec.ObjectMeta.Labels) == 0 {
-		podTemplateSpec.ObjectMeta.Labels = map[string]string{}
+	if len(podTemplateSpec.ObjectMeta.Labels) == 0 { //nolint:staticcheck
+		podTemplateSpec.ObjectMeta.Labels = map[string]string{} //nolint:staticcheck
 	}
 	for k, v := range jobLabels(apprepo, config) {
-		podTemplateSpec.ObjectMeta.Labels[k] = v
+		podTemplateSpec.ObjectMeta.Labels[k] = v //nolint:staticcheck
 	}
-	podTemplateSpec.ObjectMeta.Annotations = config.ParsedCustomAnnotations
+	podTemplateSpec.ObjectMeta.Annotations = config.ParsedCustomAnnotations //nolint:staticcheck
 	// If there's an issue, won't restart
 	podTemplateSpec.Spec.RestartPolicy = restartPolicy
 	// Populate container spec
@@ -298,10 +298,10 @@ func jobLabels(apprepo *apprepov1alpha1.AppRepository, config Config) map[string
 // kubeapps namespace, then the secret will have been copied from another namespace
 // into the kubeapps namespace and have a slightly different name.
 func secretKeyRefForRepo(keyRef corev1.SecretKeySelector, apprepo *apprepov1alpha1.AppRepository, config Config) *corev1.SecretKeySelector {
-	if apprepo.ObjectMeta.Namespace == config.KubeappsNamespace {
+	if apprepo.ObjectMeta.Namespace == config.KubeappsNamespace { //nolint:staticcheck
 		return &keyRef
 	}
-	keyRef.LocalObjectReference.Name = helm.SecretNameForNamespacedRepo(apprepo.ObjectMeta.Name, apprepo.ObjectMeta.Namespace)
+	keyRef.LocalObjectReference.Name = helm.SecretNameForNamespacedRepo(apprepo.ObjectMeta.Name, apprepo.ObjectMeta.Namespace) //nolint:staticcheck
 	return &keyRef
 }
 

@@ -22,7 +22,7 @@ func getMockManager(t *testing.T) (*postgresAssetManager, sqlmock.Sqlmock, func(
 
 	pgManager := &postgresAssetManager{&dbutils.PostgresAssetManager{DB: db}}
 
-	return pgManager, mock, func() { db.Close() }
+	return pgManager, mock, func() { db.Close() } //nolint:errcheck
 }
 
 func Test_DeletePGRepo(t *testing.T) {

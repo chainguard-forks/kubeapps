@@ -456,7 +456,7 @@ func TestParseClusterConfig(t *testing.T) {
 				t.Skip("Skipping in a Windows OS")
 			}
 			path := createConfigFile(t, tc.configJSON)
-			defer os.Remove(path)
+			defer os.Remove(path) //nolint:errcheck
 
 			config, deferFn, err := ParseClusterConfig(path, "/tmp", defaultPinnipedURL, "")
 			if got, want := err != nil, tc.expectedErr; got != want {

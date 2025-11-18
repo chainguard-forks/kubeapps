@@ -139,7 +139,19 @@ const mutexLocked = 1
 
 func RWMutexWriteLocked(rw *sync.RWMutex) bool {
 	// RWMutex has a "w" sync.Mutex field for write lock
-	state := reflect.ValueOf(rw).Elem().FieldByName("w").FieldByName("state")
+	// In Go 1.25+, the path is w -> mu -> state
+	w := reflect.ValueOf(rw).Elem().FieldByName("w")
+	if !w.IsValid() {
+		return false
+	}
+	mu := w.FieldByName("mu")
+	if !mu.IsValid() {
+		return false
+	}
+	state := mu.FieldByName("state")
+	if !state.IsValid() {
+		return false
+	}
 	return state.Int()&mutexLocked == mutexLocked
 }
 
@@ -153,7 +165,11 @@ func RWMutexWriteLocked(rw *sync.RWMutex) bool {
 // readerCount has changed from an Int to an atomic.Int32 (struct).
 // Updated to 1.20, but warning is still applicable.
 func RWMutexReadLocked(rw *sync.RWMutex) bool {
-	return reflect.ValueOf(rw).Elem().FieldByName("readerCount").FieldByName("v").Int() > 0
+	readerCount := reflect.ValueOf(rw).Elem().FieldByName("readerCount").FieldByName("v")
+	if !readerCount.IsValid() {
+		return false
+	}
+	return readerCount.Int() > 0
 }
 
 // https://github.com/vmware-tanzu/kubeapps/pull/3044#discussion_r662733334

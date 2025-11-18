@@ -148,6 +148,9 @@ spec:
             - name: empty-dir
               mountPath: /opt/bitnami/nginx/logs
               subPath: app-logs-dir
+            - name: empty-dir
+              mountPath: /var/cache/nginx
+              subPath: nginx-cache-dir
             - name: config
               mountPath: /app/config.json
               subPath: config.json

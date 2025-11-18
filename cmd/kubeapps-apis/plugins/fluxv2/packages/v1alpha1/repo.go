@@ -479,7 +479,7 @@ func (s *Server) updateRepo(ctx context.Context, repoRef *corev1.PackageReposito
 				return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Auth provider cannot be configured in combination with another auth method"))
 			}
 			if repo.Spec.Provider != "" && repo.Spec.Provider != "generic" && repo.Spec.Provider != provider {
-				return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Auth provider cannot be changed."))
+				return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Auth provider cannot be changed.")) //nolint:staticcheck
 			}
 			repo.Spec.Provider = provider
 		} else {

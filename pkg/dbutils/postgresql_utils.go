@@ -101,7 +101,7 @@ func (m *PostgresAssetManager) QueryOne(target interface{}, query string, args .
 func (m *PostgresAssetManager) QueryAllCharts(query string, args ...interface{}) ([]*models.Chart, error) {
 	rows, err := m.DB.Query(query, args...)
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 	}
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func (m *PostgresAssetManager) QueryAllCharts(query string, args ...interface{})
 func (m *PostgresAssetManager) QueryAllChartCategories(query string, args ...interface{}) ([]*models.ChartCategory, error) {
 	rows, err := m.DB.Query(query, args...)
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 	}
 	if err != nil {
 		return nil, err

@@ -61,7 +61,7 @@ func (q *rateLimitingType) AddRateLimited(item interface{}) {
 		// workqueue.Interface does not allow returning errors, so
 		runtime.HandleError(fmt.Errorf("invalid argument: expected string, found: [%T]", item))
 	} else {
-		q.DelayingInterface.AddAfter(itemstr, duration)
+		q.DelayingInterface.AddAfter(itemstr, duration) //nolint:staticcheck
 	}
 }
 
@@ -87,7 +87,7 @@ func (q *rateLimitingType) AddIfNotProcessing(item string) {
 
 func (q *rateLimitingType) Reset() {
 	log.Infof("+Reset(), [%s], delayingInterface queue size: [%d]",
-		q.Name(), q.DelayingInterface.Len())
+		q.Name(), q.DelayingInterface.Len()) //nolint:staticcheck
 
 	q.queue.reset()
 

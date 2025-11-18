@@ -222,7 +222,7 @@ func getFluxPluginClients(t *testing.T) (fluxplugin.FluxV2PackagesServiceClient,
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to dial [%s] due to: %v", target, err)
 	}
-	t.Cleanup(func() { conn.Close() })
+	t.Cleanup(func() { conn.Close() }) //nolint:errcheck
 	pluginsCli := plugins.NewPluginsServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), defaultContextTimeout)
 	defer cancel()
@@ -1231,7 +1231,7 @@ func newRedisClientForIntegrationTest(t *testing.T) (*redis.Client, error) {
 				}
 			}
 		}
-		redisCli.Close()
+		redisCli.Close() //nolint:errcheck
 	})
 	t.Logf("redisCli: %s", redisCli)
 

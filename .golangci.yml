@@ -1,0 +1,19 @@
+# Copyright 2022-2023 the Kubeapps contributors.
+# SPDX-License-Identifier: Apache-2.0
+
+version: "2"
+
+linters:
+  settings:
+    staticcheck:
+      checks:
+        - all
+        - '-ST1005'  # Ignore capitalized error strings
+        - '-ST1003'  # Ignore ALL_CAPS
+        - '-ST1016'  # Ignore method names
+  exclusions:
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling

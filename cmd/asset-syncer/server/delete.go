@@ -25,7 +25,7 @@ func Delete(serveOpts Config, args []string) error {
 	if err != nil {
 		return fmt.Errorf("error file initializing the manager: %v", err)
 	}
-	defer manager.Close()
+	defer manager.Close() //nolint:errcheck
 
 	repo := models.AppRepository{Name: args[0], Namespace: serveOpts.Namespace}
 	if err = manager.Delete(repo); err != nil {

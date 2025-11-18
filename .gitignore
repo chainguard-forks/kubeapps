@@ -20,3 +20,8 @@ integration/reports/*
 dashboard/src/locales/
 dashboard/public/clr-ui-dark.min.css*
 dashboard/public/clr-ui.min.css*
+
+# Build artifacts
+/apprepository-controller
+/asset-syncer
+/kubeapps-apis

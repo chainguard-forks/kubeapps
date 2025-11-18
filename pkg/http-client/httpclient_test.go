@@ -262,7 +262,7 @@ func TestDefaultHeaderTransport(t *testing.T) {
 			var headersReceived http.Header
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				headersReceived = r.Header
-				fmt.Fprintln(w, "Hello, world")
+				fmt.Fprintln(w, "Hello, world") //nolint:errcheck
 			}))
 			defer server.Close()
 

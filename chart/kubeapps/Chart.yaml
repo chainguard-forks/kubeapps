@@ -36,7 +36,7 @@ dependencies:
   repository: oci://registry-1.docker.io/bitnamicharts
   tags:
   - bitnami-common
-  version: 2.x.x
+  version: 2.31.0
 description: Kubeapps is a web-based UI for launching and managing applications on Kubernetes. It allows users to deploy trusted applications and operators to control users access to the cluster.
 home: https://bitnami.com
 icon: https://bitnami.com/assets/stacks/kubeapps/img/kubeapps-stack-220x234.png

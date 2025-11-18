@@ -201,6 +201,21 @@ pushChart() {
   # ref https://gist.github.com/andre3k1/e3a1a7133fded5de5a9ee99c87c6fa0d
   sed -i "s/name: ${chart}/name: ${prefix}${chart}/" "./${chart}-${version}/${chart}/Chart.yaml"
   sed -i "0,/^\([[:space:]]*description: *\).*/s//\1${description}/" "./${chart}-${version}/${chart}/Chart.yaml"
+
+  # Update image references from bitnami/ to bitnamilegacy/ since Bitnami images are deprecated
+  echo "DEBUG: Checking for values.yaml at ./${chart}-${version}/${chart}/values.yaml"
+  if [[ -f "./${chart}-${version}/${chart}/values.yaml" ]]; then
+    echo "DEBUG: Found values.yaml, updating bitnami images to bitnamilegacy"
+    # Replace bitnami repository with bitnamilegacy
+    sed -i "s|repository: bitnami/|repository: bitnamilegacy/|g" "./${chart}-${version}/${chart}/values.yaml"
+    # Remove -debian-XX-rYY suffixes from tags as bitnamilegacy only has base version tags
+    sed -i "s|tag: \([0-9.]*\)-debian-[0-9]*-r[0-9]*|tag: \1|g" "./${chart}-${version}/${chart}/values.yaml"
+    echo "DEBUG: Replacement complete. All repository and tag references:"
+    grep -E "repository:|tag:" "./${chart}-${version}/${chart}/values.yaml" | grep -v "^[[:space:]]*#"
+  else
+    echo "DEBUG: values.yaml NOT FOUND at ./${chart}-${version}/${chart}/values.yaml"
+  fi
+
   helm package "./${chart}-${version}/${chart}" -d .
 
   pushChartToChartMuseum "${chart}" "${version}" "${prefix}${chart}-${version}.tgz"
@@ -300,6 +315,31 @@ installOrUpgradeKubeapps() {
   local chartSource=$1
   # Install Kubeapps
   info "Installing Kubeapps from ${chartSource}..."
+
+  # Check if chart source exists and is valid
+  if [[ "${chartSource}" == bitnami/kubeapps ]]; then
+    info "Using Helm chart from Bitnami repository"
+    if ! helm search repo bitnami/kubeapps --version '>0.0.0' >/dev/null 2>&1; then
+      warn "Bitnami kubeapps chart not found in repositories"
+      info "Available Bitnami charts:"
+      helm search repo bitnami | head -20
+    else
+      info "Bitnami kubeapps chart is available:"
+      helm search repo bitnami/kubeapps
+    fi
+  else
+    info "Using local Helm chart from filesystem"
+    if [[ ! -f "${chartSource}/Chart.yaml" ]]; then
+      warn "Chart.yaml not found at ${chartSource}/Chart.yaml"
+      info "Directory contents:"
+      ls -la "${chartSource}" || true
+    else
+      info "Local chart exists at ${chartSource}"
+      info "Chart info:"
+      grep -E '^(name|version|appVersion):' "${chartSource}/Chart.yaml" || true
+    fi
+  fi
+
   kubectl -n kubeapps delete secret localhost-tls || true
 
   # See https://stackoverflow.com/a/36296000 for "${arr[@]+"${arr[@]}"}" notation.
@@ -320,10 +360,21 @@ installOrUpgradeKubeapps() {
     --set apprepository.initialRepos[0].basicAuth.password=password
     --set apprepository.globalReposNamespaceSuffix=-repos-global
     --set global.security.allowInsecureImages=true
-    --wait)
+    --wait
+    --timeout=5m
+    --debug)
 
   echo "${cmd[@]}"
-  "${cmd[@]}"
+  if ! "${cmd[@]}"; then
+    warn "Helm install failed or timed out. Checking pod status..."
+    info "All pods in kubeapps namespace:"
+    kubectl get pods -n kubeapps -o wide
+    info "Dashboard pod details:"
+    kubectl describe pods -n kubeapps -l app.kubernetes.io/component=dashboard || true
+    info "Dashboard pod logs:"
+    kubectl logs -n kubeapps -l app.kubernetes.io/component=dashboard --tail=100 || true
+    return 1
+  fi
 }
 
 ########################################################################################################################
@@ -420,18 +471,31 @@ fi
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm dep up "${ROOT_DIR}/chart/kubeapps"
+
+# Extract dependency charts from .tgz to fix Helm template loading issues with OCI dependencies
+info "Extracting chart dependencies..."
+cd "${ROOT_DIR}/chart/kubeapps/charts"
+for tgz in *.tgz; do
+  if [[ -f "$tgz" ]]; then
+    info "Extracting $tgz"
+    tar -xzf "$tgz"
+  fi
+done
+cd "${ROOT_DIR}"
+
 kubectl create ns kubeapps
 GLOBAL_REPOS_NS=kubeapps-repos-global
 
-if [[ -n "${TEST_UPGRADE:-}" ]]; then
-  # To test the upgrade, first install the latest version published
-  info "Installing latest Kubeapps chart available"
-  installOrUpgradeKubeapps bitnami/kubeapps \
-    "--set" "apprepository.initialRepos={}"
-
-  info "Waiting for Kubeapps components to be ready (bitnami chart)..."
-  k8s_wait_for_deployment kubeapps kubeapps-ci
-fi
+# Commenting out TEST_UPGRADE - Bitnami chart is deprecated and we only test with local CI-built images
+# if [[ -n "${TEST_UPGRADE:-}" ]]; then
+#   # To test the upgrade, first install the latest version published
+#   info "Installing latest Kubeapps chart available"
+#   installOrUpgradeKubeapps bitnami/kubeapps \
+#     "--set" "apprepository.initialRepos={}"
+#
+#   info "Waiting for Kubeapps components to be ready (bitnami chart)..."
+#   k8s_wait_for_deployment kubeapps kubeapps-ci
+# fi
 
 # Install ChartMuseum
 installChartMuseum "${CHARTMUSEUM_VERSION}"
@@ -795,7 +859,9 @@ if [[ -z "${GKE_VERSION-}" && ("${TESTS_GROUP}" == "${ALL_TESTS}" || "${TESTS_GR
     --set apprepository.globalReposNamespaceSuffix=-repos-global
     --set global.postgresql.auth.postgresPassword=password
     --set global.security.allowInsecureImages=true
-    --wait)
+    --wait
+    --timeout=10m
+    --debug)
 
   echo "${cmd[@]}"
   "${cmd[@]}"

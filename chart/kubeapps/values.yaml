@@ -217,7 +217,7 @@ frontend:
   ##
   image:
     registry: docker.io
-    repository: bitnami/nginx
+    repository: bitnamilegacy/nginx
     tag: 1.27.3-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
@@ -1423,7 +1423,7 @@ authProxy:
   ##
   image:
     registry: docker.io
-    repository: bitnami/oauth2-proxy
+    repository: bitnamilegacy/oauth2-proxy
     tag: 7.7.1-debian-12-r4
     digest: ""
     ## Specify a imagePullPolicy
@@ -1775,6 +1775,10 @@ featureFlags:
 ##
 postgresql:
   enabled: true
+  ## Override image to use bitnamilegacy since bitnami images are deprecated
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/postgresql
   auth:
     username: "postgres"
     postgresPassword: ""
@@ -2427,6 +2431,10 @@ ociCatalog:
 ##
 ## Redis(R) will be enabled and installed if `packages.flux.enabled` is true.
 redis:
+  ## Override image to use bitnamilegacy since bitnami images are deprecated
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/redis
   ## @param redis.auth.enabled Enable password authentication
   ## @param redis.auth.password Redis&reg; password
   ## @param redis.auth.existingSecret The name of an existing secret with Redis&reg; credentials

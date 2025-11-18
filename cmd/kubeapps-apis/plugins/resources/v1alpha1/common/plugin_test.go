@@ -3,15 +3,16 @@
 package common
 
 import (
+	"os"
+	"runtime"
+	"strings"
+	"testing"
+
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/vmware-tanzu/kubeapps/cmd/kubeapps-apis/plugins/pkg/pkgutils"
 	log "k8s.io/klog/v2"
-	"os"
-	"runtime"
 	"sigs.k8s.io/yaml"
-	"strings"
-	"testing"
 )
 
 func TestParsePluginConfig(t *testing.T) {
@@ -75,7 +76,7 @@ resources:
 				if err != nil {
 					log.Fatalf("%s", err)
 				}
-				defer os.Remove(f.Name()) // clean up
+				defer os.Remove(f.Name()) //nolint:errcheck // clean up
 				if _, err := f.Write(pluginJSONConf); err != nil {
 					log.Fatalf("%s", err)
 				}

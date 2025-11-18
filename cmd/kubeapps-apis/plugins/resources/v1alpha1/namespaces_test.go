@@ -23,8 +23,8 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 	pkgsGRPCv1alpha1 "github.com/vmware-tanzu/kubeapps/cmd/kubeapps-apis/gen/core/packages/v1alpha1"
 	"github.com/vmware-tanzu/kubeapps/cmd/kubeapps-apis/gen/plugins/resources/v1alpha1"
-	core "k8s.io/api/core/v1"
-	v1 "k8s.io/api/core/v1"
+	core "k8s.io/api/core/v1" //nolint:staticcheck
+	v1 "k8s.io/api/core/v1"   //nolint:staticcheck
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -169,7 +169,7 @@ func TestCreateNamespace(t *testing.T) {
 			validator: func(action clientGoTesting.Action) (handled bool, ret runtime.Object, err error) {
 				createAction := action.(clientGoTesting.CreateActionImpl)
 				createNamespace := createAction.GetObject().(*v1.Namespace)
-				assert.Nil(t, createNamespace.ObjectMeta.Labels)
+				assert.Nil(t, createNamespace.ObjectMeta.Labels) //nolint:staticcheck
 				return false, nil, err
 			},
 		},
@@ -189,8 +189,8 @@ func TestCreateNamespace(t *testing.T) {
 			validator: func(action clientGoTesting.Action) (handled bool, ret runtime.Object, err error) {
 				createAction := action.(clientGoTesting.CreateActionImpl)
 				createNamespace := createAction.GetObject().(*v1.Namespace)
-				assert.Contains(t, createNamespace.ObjectMeta.Labels, "label1")
-				assert.Contains(t, createNamespace.ObjectMeta.Labels, "label2")
+				assert.Contains(t, createNamespace.ObjectMeta.Labels, "label1") //nolint:staticcheck
+				assert.Contains(t, createNamespace.ObjectMeta.Labels, "label2") //nolint:staticcheck
 				return false, nil, err
 			},
 		},

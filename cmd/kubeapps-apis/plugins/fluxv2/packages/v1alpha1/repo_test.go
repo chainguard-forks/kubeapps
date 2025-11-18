@@ -609,9 +609,9 @@ func TestGetAvailablePackageSummaryAfterRepoIndexUpdate(t *testing.T) {
 		// stand up an http server just for the duration of this test
 		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if updateHappened {
-				fmt.Fprintln(w, string(indexYamlAfterUpdateBytes))
+				fmt.Fprintln(w, string(indexYamlAfterUpdateBytes)) //nolint:errcheck
 			} else {
-				fmt.Fprintln(w, string(indexYamlBeforeUpdateBytes))
+				fmt.Fprintln(w, string(indexYamlBeforeUpdateBytes)) //nolint:errcheck
 			}
 		}))
 		defer ts.Close()
@@ -1777,7 +1777,7 @@ func TestGetPackageRepositorySummaries(t *testing.T) {
 		t.Fatal(err)
 	}
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, string(indexYAMLBytes))
+		fmt.Fprintln(w, string(indexYAMLBytes)) //nolint:errcheck
 	}))
 	defer ts.Close()
 	get_summaries_repo_1.Status.URL = ts.URL
@@ -2459,7 +2459,7 @@ func newRepo(name string, namespace string, spec *sourcev1beta2.HelmRepositorySp
 		},
 	}
 	if namespace != "" {
-		helmRepository.ObjectMeta.Namespace = namespace
+		helmRepository.ObjectMeta.Namespace = namespace //nolint:staticcheck
 	}
 
 	// Just FYI, if spec is not specified, the repo object will have a default one, e.g.
@@ -2628,7 +2628,7 @@ func newHttpRepoAndServeIndex(repoIndex, repoName, repoNamespace string, replace
 	// happen in production. See comments in repo.go for explanation
 	// This is only true for repo index.yaml, not for the chart URLs within it.
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, string(indexYAMLBytes))
+		fmt.Fprintln(w, string(indexYAMLBytes)) //nolint:errcheck
 	}))
 
 	repoSpec := &sourcev1beta2.HelmRepositorySpec{

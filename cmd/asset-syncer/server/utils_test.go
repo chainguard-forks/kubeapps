@@ -328,7 +328,7 @@ func Test_initNetClient(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.RemoveAll(otherDir)
+	defer os.RemoveAll(otherDir) //nolint:errcheck
 
 	// Create cert
 	caCert := `-----BEGIN CERTIFICATE-----
@@ -617,7 +617,7 @@ func Test_fetchAndImportFiles(t *testing.T) {
 			files = append(files, tartest.TarballFile{Name: charts[0].Name + "/README.md", Body: testChartReadme})
 			files = append(files, tartest.TarballFile{Name: charts[0].Name + "/values.schema.json", Body: testChartSchema})
 			tartest.CreateTestTarball(gzw, files)
-			gzw.Flush()
+			gzw.Flush() //nolint:errcheck
 			return
 		}
 		w.WriteHeader(200)
@@ -1417,7 +1417,7 @@ version: 1.0.0
 				recorder := httptest.NewRecorder()
 				gzw := gzip.NewWriter(recorder)
 				tartest.CreateTestTarball(gzw, tt.ociArtifactFiles)
-				gzw.Flush()
+				gzw.Flush() //nolint:errcheck
 				w[tag] = recorder
 				content[tag] = recorder.Body
 			}
@@ -1491,7 +1491,7 @@ version: 1.0.0
 		recorder := httptest.NewRecorder()
 		gzw := gzip.NewWriter(recorder)
 		tartest.CreateTestTarball(gzw, files)
-		gzw.Flush()
+		gzw.Flush() //nolint:errcheck
 		content[tag] = recorder.Body
 
 		tagList, err := json.Marshal(TagList{

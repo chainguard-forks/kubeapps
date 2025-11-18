@@ -32,7 +32,7 @@ func FetchChartDetailFromTarballUrl(chartTarballURL string, userAgent string, au
 	// use our "standard" http-client library
 	reader, _, err := httpclient.GetStream(chartTarballURL, netClient, reqHeaders)
 	if reader != nil {
-		defer reader.Close()
+		defer reader.Close() //nolint:errcheck
 	}
 
 	if err != nil {
@@ -52,7 +52,7 @@ func FetchChartDetailFromTarball(reader io.Reader) (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer gzf.Close()
+	defer gzf.Close() //nolint:errcheck
 
 	tarf := tar.NewReader(gzf)
 

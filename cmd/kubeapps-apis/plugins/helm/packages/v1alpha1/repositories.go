@@ -353,7 +353,7 @@ func (s *Server) updateRepo(ctx context.Context,
 
 	var secret *k8scorev1.Secret
 	if authSecret != nil && caSecret != nil && authSecret.Name != caSecret.Name {
-		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("Inconsistent state. auth secret and ca secret must be the same."))
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("Inconsistent state. auth secret and ca secret must be the same.")) //nolint:staticcheck
 	} else if authSecret != nil {
 		secret = authSecret
 	} else if caSecret != nil {

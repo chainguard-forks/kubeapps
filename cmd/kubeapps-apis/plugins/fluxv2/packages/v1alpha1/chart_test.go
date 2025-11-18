@@ -259,7 +259,7 @@ func TestTransientHttpFailuresAreRetriedForChartCache(t *testing.T) {
 				if !nofail && failuresAllowed > 0 {
 					failuresAllowed--
 					w.WriteHeader(503)
-					_, err = w.Write([]byte(fmt.Sprintf("The server is not ready to handle the request: [%d try left before OK]", failuresAllowed)))
+					_, err = w.Write([]byte(fmt.Sprintf("The server is not ready to handle the request: [%d try left before OK]", failuresAllowed))) //nolint:staticcheck
 					if err != nil {
 						t.Fatalf("%+v", err)
 					}
@@ -804,7 +804,7 @@ func TestChartCacheResyncNotIdle(t *testing.T) {
 		if err != nil {
 			t.Fatalf("%+v", err)
 		}
-		defer os.Remove(tmpFile.Name())
+		defer os.Remove(tmpFile.Name()) //nolint:errcheck
 
 		templateYAMLBytes, err := os.ReadFile(testYaml("single-package-template.yaml"))
 		if err != nil {
@@ -966,8 +966,8 @@ func TestChartWithRelativeURL(t *testing.T) {
 	}
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.RequestURI == "/index.yaml" {
-			fmt.Fprintln(w, string(indexYAMLBytes))
+		if r.RequestURI == "/index.yaml" { //nolint:staticcheck
+			fmt.Fprintln(w, string(indexYAMLBytes)) //nolint:errcheck
 		} else if r.RequestURI == "/charts/airflow-1.0.0.tgz" {
 			w.WriteHeader(200)
 			_, err = w.Write(tarGzBytes)
@@ -1137,7 +1137,7 @@ func newChart(name, namespace string, spec *sourcev1beta2.HelmChartSpec, status 
 		},
 	}
 	if namespace != "" {
-		helmChart.ObjectMeta.Namespace = namespace
+		helmChart.ObjectMeta.Namespace = namespace //nolint:staticcheck
 	}
 
 	if spec != nil {

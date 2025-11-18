@@ -316,7 +316,7 @@ func downloadHttpChartFn(options *common.HttpClientOptions) func(chartID, chartU
 
 		reader, _, err := httpclient.GetStream(chartUrl, client, headers)
 		if reader != nil {
-			defer reader.Close()
+			defer reader.Close() //nolint:errcheck
 		}
 		if err != nil {
 			return nil, err

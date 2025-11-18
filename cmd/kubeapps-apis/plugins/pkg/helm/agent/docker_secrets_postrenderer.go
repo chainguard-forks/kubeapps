@@ -118,7 +118,7 @@ func (r *DockerSecretsPostRenderer) Run(renderedManifests *bytes.Buffer) (modifi
 
 	modifiedManifests = bytes.NewBuffer([]byte{})
 	encoder := yaml.NewEncoder(modifiedManifests)
-	defer encoder.Close()
+	defer encoder.Close() //nolint:errcheck
 
 	for _, resource := range resourceList {
 		err = encoder.Encode(resource)

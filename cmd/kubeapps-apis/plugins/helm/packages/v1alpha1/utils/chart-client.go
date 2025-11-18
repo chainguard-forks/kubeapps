@@ -17,10 +17,10 @@ import (
 	"github.com/vmware-tanzu/kubeapps/pkg/kube"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
-	corev1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1" //nolint:staticcheck
 	log "k8s.io/klog/v2"
 
-	k8scorev1 "k8s.io/api/core/v1"
+	k8scorev1 "k8s.io/api/core/v1" //nolint:staticcheck
 )
 
 // ChartDetails contains the information to retrieve a Chart

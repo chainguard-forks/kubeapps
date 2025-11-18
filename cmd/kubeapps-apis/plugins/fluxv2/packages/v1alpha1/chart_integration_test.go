@@ -81,7 +81,7 @@ func TestKindClusterGetAvailablePackageSummariesForLargeReposAndTinyRedis(t *tes
 	func() {
 		// ref https://medium.com/nerd-for-tech/redis-getting-notified-when-a-key-is-expired-or-changed-ca3e1f1c7f0a
 		subscribe := redisCli.PSubscribe(redisCli.Context(), "__keyevent@0__:*")
-		defer subscribe.Close()
+		defer subscribe.Close() //nolint:errcheck
 
 		sem := semaphore.NewWeighted(MAX_REPOS_NEVER)
 		if err := sem.Acquire(context.Background(), MAX_REPOS_NEVER); err != nil {
@@ -146,7 +146,7 @@ func TestKindClusterGetAvailablePackageSummariesForLargeReposAndTinyRedis(t *tes
 	// do this part in a func so we can defer subscribe.Close
 	func() {
 		subscribe := redisCli.PSubscribe(redisCli.Context(), "__keyevent@0__:*")
-		defer subscribe.Close()
+		defer subscribe.Close() //nolint:errcheck
 
 		go redisReceiveNotificationsLoop(t, subscribe.Channel(), nil, &evictedRepos)
 
@@ -177,7 +177,7 @@ func TestKindClusterGetAvailablePackageSummariesForLargeReposAndTinyRedis(t *tes
 	// do this part in a func so we can defer subscribe.Close
 	func() {
 		subscribe := redisCli.PSubscribe(redisCli.Context(), "__keyevent@0__:*")
-		defer subscribe.Close()
+		defer subscribe.Close() //nolint:errcheck
 
 		// above loop should cause a few more entries to be evicted, but just to be sure let's
 		// load a few more copies of bitnami repo into the cache. The goal of this for loop is

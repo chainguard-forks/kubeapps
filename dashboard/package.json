@@ -38,7 +38,7 @@
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.20.1",
     "ajv": "^8.17.1",
-    "axios": "^1.7.7",
+    "axios": "^1.12.0",
     "fast-json-patch": "^3.1.1",
     "google-protobuf": "^3.21.4",
     "jsonwebtoken": "^9.0.2",
@@ -131,9 +131,17 @@
   },
   "resolutions": {
     "@types/react": "^17.0.80",
+    "on-headers": ">=1.1.0",
+    "sha.js": "^2.4.12",
     "swagger-ui-react/react": "^17.0.2",
     "swagger-ui-react/react-dom": "^17.0.2",
-    "swagger-ui-react/react-redux": "^7.2.9"
+    "swagger-ui-react/react-redux": "^7.2.9",
+    "form-data": ">=3.0.4",
+    "braces": ">=3.0.3",
+    "dompurify": ">=3.2.4",
+    "cross-spawn": ">=7.0.5",
+    "nth-check": ">=2.0.1",
+    "path-to-regexp": ">=0.1.12"
   },
   "jest": {
     "resetMocks": false,

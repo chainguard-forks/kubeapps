@@ -78,7 +78,7 @@ func (m *postgresAssetManager) UpdateLastCheck(repoNamespace, repoName, checksum
 	`, dbutils.RepositoryTable)
 	rows, err := m.DB.Query(query, repoNamespace, repoName, checksum, now.String())
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 	}
 	return err
 }
@@ -96,7 +96,7 @@ func (m *postgresAssetManager) RemoveMissingCharts(repo models.AppRepository, ch
 	log.V(4).Infof("Removing the following charts that are no longer present in the repo: %s", chartNamesString)
 	rows, err := m.DB.Query(fmt.Sprintf("DELETE FROM %s WHERE info->>'name' IN (%s) AND repo_name = $1 AND repo_namespace = $2", dbutils.ChartTable, chartNamesString), repo.Name, repo.Namespace)
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 	}
 	return err
 }
@@ -104,7 +104,7 @@ func (m *postgresAssetManager) RemoveMissingCharts(repo models.AppRepository, ch
 func (m *postgresAssetManager) Delete(repo models.AppRepository) error {
 	rows, err := m.DB.Query(fmt.Sprintf("DELETE FROM %s WHERE name = $1 AND namespace = $2", dbutils.RepositoryTable), repo.Name, repo.Namespace)
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 	}
 	return err
 }
@@ -115,7 +115,7 @@ func (m *postgresAssetManager) updateIcon(repo models.AppRepository, data []byte
 		base64.StdEncoding.EncodeToString(data), contentType,
 	), ID, repo.Namespace, repo.Name)
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 		var id int
 		if !rows.Next() {
 			return sql.ErrNoRows
@@ -157,7 +157,7 @@ func (m *postgresAssetManager) insertFiles(chartId string, files models.ChartFil
 	`, dbutils.ChartFilesTable)
 	rows, err := m.DB.Query(query, chartId, files.Repo.Name, files.Repo.Namespace, files.ID, files)
 	if rows != nil {
-		defer rows.Close()
+		defer rows.Close() //nolint:errcheck
 	}
 	return err
 }

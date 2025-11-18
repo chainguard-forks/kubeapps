@@ -24,7 +24,7 @@ func getMockManager(t *testing.T) (*PostgresAssetManager, sqlmock.Sqlmock, func(
 
 	pgManager := &PostgresAssetManager{&dbutils.PostgresAssetManager{DB: db, GlobalPackagingNamespace: "kubeapps"}}
 
-	return pgManager, mock, func() { db.Close() }
+	return pgManager, mock, func() { db.Close() } //nolint:errcheck
 }
 
 func Test_PGGetChart(t *testing.T) {

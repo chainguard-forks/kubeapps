@@ -173,7 +173,7 @@ func NewClientTLS(certBytes, keyBytes, caBytes []byte) (*tls.Config, error) {
 func Get(url string, cli *http.Client, headers map[string]string) ([]byte, error) {
 	reader, _, err := GetStream(url, cli, headers)
 	if reader != nil {
-		defer reader.Close()
+		defer reader.Close() //nolint:errcheck
 	}
 	if err != nil {
 		return nil, err

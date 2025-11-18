@@ -24,7 +24,7 @@ func InvalidateCache(serveOpts Config, args []string) error {
 	if err != nil {
 		return fmt.Errorf("error: %v", err)
 	}
-	defer manager.Close()
+	defer manager.Close() //nolint:errcheck
 
 	err = manager.InvalidateCache()
 	if err != nil {

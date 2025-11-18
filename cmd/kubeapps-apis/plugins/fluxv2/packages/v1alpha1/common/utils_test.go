@@ -126,7 +126,7 @@ core:
 				if err != nil {
 					log.Fatalf("%s", err)
 				}
-				defer os.Remove(f.Name()) // clean up
+				defer os.Remove(f.Name()) //nolint:errcheck // clean up
 				if _, err := f.Write(pluginJSONConf); err != nil {
 					log.Fatalf("%s", err)
 				}
@@ -186,7 +186,7 @@ core:
 				if err != nil {
 					log.Fatalf("%s", err)
 				}
-				defer os.Remove(f.Name()) // clean up
+				defer os.Remove(f.Name()) //nolint:errcheck // clean up
 				if _, err := f.Write(pluginJSONConf); err != nil {
 					log.Fatalf("%s", err)
 				}
@@ -250,7 +250,7 @@ flux:
 				if err != nil {
 					log.Fatalf("%s", err)
 				}
-				defer os.Remove(f.Name()) // clean up
+				defer os.Remove(f.Name()) //nolint:errcheck // clean up
 				if _, err := f.Write(pluginJSONConf); err != nil {
 					log.Fatalf("%s", err)
 				}
@@ -314,7 +314,7 @@ flux:
 				if err != nil {
 					log.Fatalf("%s", err)
 				}
-				defer os.Remove(f.Name()) // clean up
+				defer os.Remove(f.Name()) //nolint:errcheck // clean up
 				if _, err := f.Write(pluginJSONConf); err != nil {
 					log.Fatalf("%s", err)
 				}

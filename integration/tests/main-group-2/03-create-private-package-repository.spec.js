@@ -114,7 +114,7 @@ test("Create a new private package repository successfully", async ({ page }) =>
     .click();
   await page.getByPlaceholder("Find").fill("tag: 2.4.48");
   await expect(page.locator(".values-editor div.modified")).toContainText(
-    "tag: 2.4.48-debian-10-r75",
+    "tag: 2.4.48",
   );
 
   // Deploy upgrade

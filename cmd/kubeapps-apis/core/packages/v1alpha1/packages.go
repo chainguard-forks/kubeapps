@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"net/http"
 
-	. "github.com/ahmetb/go-linq/v3"
+	. "github.com/ahmetb/go-linq/v3" //nolint:staticcheck
 	"github.com/bufbuild/connect-go"
 	pluginsv1alpha1 "github.com/vmware-tanzu/kubeapps/cmd/kubeapps-apis/core/plugins/v1alpha1"
 	packages "github.com/vmware-tanzu/kubeapps/cmd/kubeapps-apis/gen/core/packages/v1alpha1"
@@ -63,7 +63,7 @@ func (s packagesServer) GetAvailablePackageSummaries(ctx context.Context, reques
 
 	summariesWithOffsets, err := fanInAvailablePackageSummaries(ctx, s.pluginsWithServers, request)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("Unable to request results from registered plugins: %w", err))
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("Unable to request results from registered plugins: %w", err)) //nolint:staticcheck
 	}
 
 	pkgs := []*packages.AvailablePackageSummary{}
@@ -87,7 +87,7 @@ func (s packagesServer) GetAvailablePackageSummaries(ctx context.Context, reques
 		if v != CompleteToken {
 			token, err := json.Marshal(pkgWithOffsets.nextItemOffsets)
 			if err != nil {
-				return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("Unable to marshal next item offsets %v: %w", pkgWithOffsets.nextItemOffsets, err))
+				return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("Unable to marshal next item offsets %v: %w", pkgWithOffsets.nextItemOffsets, err)) //nolint:staticcheck
 			}
 			nextPageToken = string(token)
 			break
@@ -109,7 +109,7 @@ func (s packagesServer) GetAvailablePackageDetail(ctx context.Context, request *
 	log.InfoS("+core GetAvailablePackageDetail", "cluster", request.Msg.GetAvailablePackageRef().GetContext().GetCluster(), "namespace", request.Msg.GetAvailablePackageRef().GetContext().GetNamespace())
 
 	if request.Msg.GetAvailablePackageRef().GetPlugin() == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Unable to retrieve the plugin (missing AvailablePackageRef.Plugin)"))
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Unable to retrieve the plugin (missing AvailablePackageRef.Plugin)")) //nolint:staticcheck
 	}
 
 	// Retrieve the plugin with server matching the requested plugin name

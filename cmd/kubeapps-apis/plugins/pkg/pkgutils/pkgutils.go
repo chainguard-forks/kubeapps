@@ -76,7 +76,7 @@ func SortByPackageVersion(versions []models.ChartVersion) ([]*PackageSemVersion,
 		})
 	}
 	sort.Slice(sortedVersions, func(i, j int) bool {
-		return sortedVersions[i].Version.GreaterThan(sortedVersions[j].Version)
+		return sortedVersions[i].Version.GreaterThan(sortedVersions[j].Version) //nolint:staticcheck
 	})
 	return sortedVersions, nil
 }
@@ -126,7 +126,7 @@ func PackageAppVersionsSummary(versions []models.ChartVersion, versionInSummary 
 
 		// Include the version and update the version map.
 		pav = append(pav, &corev1.PackageAppVersion{
-			PkgVersion: version.Version.String(),
+			PkgVersion: version.Version.String(), //nolint:staticcheck
 			AppVersion: version.AppVersion,
 		})
 
@@ -145,26 +145,26 @@ func PackageAppVersionsSummary(versions []models.ChartVersion, versionInSummary 
 // together with required fields for our model.
 func IsValidChart(chart *models.Chart) (bool, error) {
 	if chart.Name == "" {
-		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .Name not found on helm chart: %v", chart))
+		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .Name not found on helm chart: %v", chart)) //nolint:staticcheck
 	}
 	if chart.ID == "" {
-		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .ID not found on helm chart: %v", chart))
+		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .ID not found on helm chart: %v", chart)) //nolint:staticcheck
 	}
 	if chart.Repo == nil {
-		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .Repo not found on helm chart: %v", chart))
+		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .Repo not found on helm chart: %v", chart)) //nolint:staticcheck
 	}
 	if len(chart.ChartVersions) == 0 {
-		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .chart.ChartVersions not found on helm chart or is empty: %v", chart))
+		return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .chart.ChartVersions not found on helm chart or is empty: %v", chart)) //nolint:staticcheck
 	} else {
 		for _, chartVersion := range chart.ChartVersions {
 			if chartVersion.Version == "" {
-				return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .ChartVersions[i].Version not found on helm chart: %v", chart))
+				return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .ChartVersions[i].Version not found on helm chart: %v", chart)) //nolint:staticcheck
 			}
 		}
 	}
 	for _, maintainer := range chart.Maintainers {
 		if maintainer.Name == "" {
-			return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .Maintainers[i].Name not found on helm chart: %v", chart))
+			return false, connect.NewError(connect.CodeInternal, fmt.Errorf("Required field .Maintainers[i].Name not found on helm chart: %v", chart)) //nolint:staticcheck
 		}
 	}
 	return true, nil
@@ -207,7 +207,7 @@ func AvailablePackageSummaryFromChart(chart *models.Chart, plugin *plugins.Plugi
 			}
 		} else {
 			pkg.LatestVersion = &corev1.PackageAppVersion{
-				PkgVersion: sortedVersions[0].Version.String(),
+				PkgVersion: sortedVersions[0].Version.String(), //nolint:staticcheck
 				AppVersion: sortedVersions[0].AppVersion,
 			}
 		}
@@ -389,7 +389,7 @@ func defaultValues(x interface{}, s *structuralschema.Structural) {
 
 // isNonNullalbeNull returns true if the item is nil AND it's nullable
 func isNonNullableNull(x interface{}, s *structuralschema.Structural) bool {
-	return x == nil && s != nil && !s.Generic.Nullable
+	return x == nil && s != nil && !s.Generic.Nullable //nolint:staticcheck
 }
 
 // isKindInt returns true if the item is an int

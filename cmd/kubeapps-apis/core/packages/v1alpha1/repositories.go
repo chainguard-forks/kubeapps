@@ -9,7 +9,7 @@ import (
 	"sort"
 	"sync"
 
-	. "github.com/ahmetb/go-linq/v3"
+	. "github.com/ahmetb/go-linq/v3" //nolint:staticcheck
 	"github.com/bufbuild/connect-go"
 
 	pluginsv1alpha1 "github.com/vmware-tanzu/kubeapps/cmd/kubeapps-apis/core/plugins/v1alpha1"

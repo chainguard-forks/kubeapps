@@ -178,7 +178,7 @@ func (s *Server) GetKappClients(headers http.Header, cluster, namespace string) 
 	}
 	appsClient, resourcesClient, failingAPIServicesPolicy, resourceFilter, err := s.kappClientsGetter(headers, cluster, namespace)
 	if err != nil {
-		return ctlapp.Apps{}, ctlres.IdentifiedResources{}, nil, ctlres.ResourceFilter{}, connect.NewError(connect.CodeFailedPrecondition, fmt.Errorf("Unable to get Kapp Factory : %w", err))
+		return ctlapp.Apps{}, ctlres.IdentifiedResources{}, nil, ctlres.ResourceFilter{}, connect.NewError(connect.CodeFailedPrecondition, fmt.Errorf("Unable to get Kapp Factory : %w", err)) //nolint:staticcheck
 	}
 	return appsClient, resourcesClient, failingAPIServicesPolicy, resourceFilter, nil
 }

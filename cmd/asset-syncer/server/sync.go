@@ -35,7 +35,7 @@ func Sync(serveOpts Config, version string, args []string) error {
 		return fmt.Errorf("error: %v", err)
 	}
 
-	defer manager.Close()
+	defer manager.Close() //nolint:errcheck
 
 	netClient, err := httpclient.NewWithCertFile(additionalCAFile, serveOpts.TlsInsecureSkipVerify)
 	if err != nil {

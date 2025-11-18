@@ -138,7 +138,7 @@ func getOCIAppRepositoryTag(cli *http.Client, repoURL string, repoName string) (
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("unexpected status code when querying %q: %d", repoName, resp.StatusCode)
@@ -195,7 +195,7 @@ func getOCIAppRepositoryMediaType(client *http.Client, repoURL string, repoName 
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck
 
 	var mediaData repoManifest
 

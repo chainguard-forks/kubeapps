@@ -339,7 +339,7 @@ func (s *Server) GetAvailablePackageDetail(ctx context.Context, request *connect
 			log.Errorf("Error parsing versions as semver: %v", err)
 			version = chart.ChartVersions[0].Version
 		} else {
-			version = sortedVersions[0].Version.String()
+			version = sortedVersions[0].Version.String() //nolint:staticcheck
 		}
 	}
 	fileID := fileIDForChart(unescapedChartID, version)
@@ -375,7 +375,7 @@ func (s *Server) GetAvailablePackageVersions(ctx context.Context, request *conne
 	cluster := request.Msg.GetAvailablePackageRef().GetContext().GetCluster()
 	// Currently we support available packages on the kubeapps cluster only.
 	if cluster != "" && cluster != s.globalPackagingCluster {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Requests for versions of available packages on clusters other than %q not supported. Requested cluster was %q.", s.globalPackagingCluster, cluster))
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("Requests for versions of available packages on clusters other than %q not supported. Requested cluster was %q.", s.globalPackagingCluster, cluster)) //nolint:staticcheck
 	}
 
 	// After requesting a specific namespace, we have to ensure the user can actually access to it
@@ -444,7 +444,7 @@ func AvailablePackageDetailFromChart(chart *models.Chart, chartFiles *models.Cha
 			}
 		} else {
 			pkg.Version = &corev1.PackageAppVersion{
-				PkgVersion: sortedVersions[0].Version.String(),
+				PkgVersion: sortedVersions[0].Version.String(), //nolint:staticcheck
 				AppVersion: sortedVersions[0].AppVersion,
 			}
 		}
@@ -556,7 +556,7 @@ func (s *Server) GetInstalledPackageSummaries(ctx context.Context, request *conn
 				}
 			} else {
 				installedPkgSummaries[i].LatestVersion = &corev1.PackageAppVersion{
-					PkgVersion: sortedVersions[0].Version.String(),
+					PkgVersion: sortedVersions[0].Version.String(), //nolint:staticcheck
 					AppVersion: sortedVersions[0].AppVersion,
 				}
 			}
@@ -694,7 +694,7 @@ func (s *Server) GetInstalledPackageDetail(ctx context.Context, request *connect
 				}
 			} else {
 				installedPkgDetail.LatestVersion = &corev1.PackageAppVersion{
-					PkgVersion: sortedVersions[0].Version.String(),
+					PkgVersion: sortedVersions[0].Version.String(), //nolint:staticcheck
 					AppVersion: sortedVersions[0].AppVersion,
 				}
 			}
@@ -809,7 +809,7 @@ func (s *Server) UpdateInstalledPackage(ctx context.Context, request *connect.Re
 
 	availablePkgRef := detailResponse.Msg.GetInstalledPackageDetail().GetAvailablePackageRef()
 	if availablePkgRef == nil {
-		return nil, connect.NewError(connect.CodeFailedPrecondition, fmt.Errorf("Unable to find the available package used to deploy %q in the namespace %q.", releaseName, installedRef.GetContext().GetNamespace()))
+		return nil, connect.NewError(connect.CodeFailedPrecondition, fmt.Errorf("Unable to find the available package used to deploy %q in the namespace %q.", releaseName, installedRef.GetContext().GetNamespace())) //nolint:staticcheck
 	}
 
 	typedClient, err := s.clientGetter.Typed(request.Header(), s.globalPackagingCluster)
