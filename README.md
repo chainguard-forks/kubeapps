@@ -5,8 +5,34 @@
 [![CodeQL](https://github.com/vmware-tanzu/kubeapps/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/vmware-tanzu/kubeapps/actions/workflows/codeql-scheduled.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7e0e2833-1d75-43f6-b006-632d359bb83b/deploy-status)](https://app.netlify.com/sites/kubeapps-dev/deploys)
 
-> [!CAUTION]
-> After many years of growth and milestones, the time has come for the next chapter of Kubeapps. The current maintainers are concentrating their efforts on new projects. As of August 25th, 2025, the project has been deprecated and the repository archived. If a widely adopted fork emerges, we will link to it here to guide users arriving at this repository.
+> [!IMPORTANT]
+> This is a supported replacement of the original `vmware-tanzu/kubeapps`
+> repository, which was archived in August of 2025. Further details in
+> [History and Status](#history-and-status).
+
+> Community contributions are not being accepted at this time. The documentation
+> has been carried over directly from the original repository and may not reflect
+> recent changes. We will update dependencies only to resolve security
+> vulnerabilities (CVEs).
+
+## History and Status
+
+Kubeapps was originally created by VMware Tanzu and published at
+[vmware-tanzu/kubeapps](https://github.com/vmware-tanzu/kubeapps).
+The project was archived in August 2025 and forked by Chainguard in November 2025
+to [chainguard-forks/kubeapps](https://github.com/chainguard-forks/kubeapps).
+
+No feature work is planned.
+
+## Releases
+
+Kubeapps releases are only created as [tags on the source
+repository](https://github.com/chainguard-forks/kubeapps/tags).
+
+Release notes and source code archives are available on the [releases
+section](https://github.com/chainguard-forks/kubeapps/releases).
+
+Binary release artifacts such as container images are **not published**.
 
 ## Overview
 
