@@ -13,7 +13,10 @@
 > Community contributions are not being accepted at this time. The documentation
 > has been carried over directly from the original repository and may not reflect
 > recent changes. We will update dependencies only to resolve security
-> vulnerabilities (CVEs).
+> vulnerabilities (CVEs). If a dependency update to resolve a CVE requires more than updating
+> dependency versions, if it, for instance, requires making extensive changes to accommodate
+> a new API, we will, as a general policy, not make that change in order to avoid accidentally
+> introducing a regression.
 
 ## History and Status
 
