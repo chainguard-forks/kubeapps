@@ -86,6 +86,11 @@ jobs:
       ssh_key_forked_charts_deploy_filename: ${{ steps.set-outputs.outputs.ssh_key_forked_charts_deploy_filename }}
       triggered_from_fork: ${{ steps.set-outputs.outputs.triggered_from_fork }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - name: Show GitHub event
         env:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
@@ -167,6 +172,11 @@ jobs:
     needs: linters
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - name: "Check all linters result"
         if: needs.linters.result != 'success'
         run: exit 1
@@ -188,9 +198,14 @@ jobs:
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
           go-version: ${{ env.GOLANG_VERSION }}
       - name: Run go unit tests
@@ -208,8 +223,13 @@ jobs:
       # See https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
       NODE_OPTIONS: "--max-old-space-size=1024"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dashboard dependencies
@@ -226,7 +246,12 @@ jobs:
     container:
       image: rust:${{needs.setup.outputs.rust_version}}
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Run rust unit tests
         run: cargo test --manifest-path cmd/pinniped-proxy/Cargo.toml
 
@@ -237,7 +262,12 @@ jobs:
     container:
       image: rust:${{needs.setup.outputs.rust_version}}
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Install protoc dependency
         run: |
           apt-get update -y
@@ -250,8 +280,13 @@ jobs:
       - setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
         with:
           go-version: ${{ env.GOLANG_VERSION }}
       - name: "Install helm (minimum and stable)"
@@ -278,20 +313,25 @@ jobs:
           - pinniped-proxy
           - oci-catalog
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - id: setup
         run: |
           echo "img_name=${{matrix.image}}" >> $GITHUB_OUTPUT
           echo "img_file=/tmp/${{matrix.image}}-image.tar" >> $GITHUB_OUTPUT
-      - uses: docker/metadata-action@v5
+      - uses: docker/metadata-action@318604b99e75e41977312d83839a89be02ca4893 # v5.9.0
         id: meta
         with:
           images: ${{needs.setup.outputs.img_prefix}}${{steps.setup.outputs.img_name}}${{needs.setup.outputs.img_modifier}}
           flavor: latest=true
           tags: ${{needs.setup.outputs.img_dev_tag}}
-      - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
         with:
@@ -303,7 +343,7 @@ jobs:
           cache-to: type=gha,mode=max
           outputs: type=docker,dest=${{ steps.setup.outputs.img_file }}
       - name: Upload image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{matrix.image}}-image
           path: ${{ steps.setup.outputs.img_file }}
@@ -316,21 +356,26 @@ jobs:
     env:
       IMG_NAME: dashboard
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - id: setup
         run: |
           echo "img_name=${IMG_NAME}" >> $GITHUB_OUTPUT
           echo "img_file=/tmp/${IMG_NAME}-image.tar" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v4
-      - uses: docker/metadata-action@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: docker/metadata-action@318604b99e75e41977312d83839a89be02ca4893 # v5.9.0
         id: meta
         with:
           images: ${{needs.setup.outputs.img_prefix}}${{steps.setup.outputs.img_name}}${{needs.setup.outputs.img_modifier}}
           flavor: latest=true
           tags: ${{needs.setup.outputs.img_dev_tag}}
-      - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
         with:
@@ -342,7 +387,7 @@ jobs:
           cache-to: type=gha,mode=max
           outputs: type=docker,dest=${{ steps.setup.outputs.img_file }}
       - name: Upload image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ steps.setup.outputs.img_name }}-image
           path: ${{ steps.setup.outputs.img_file }}
@@ -355,20 +400,25 @@ jobs:
     env:
       IMG_NAME: integration-tests
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - id: setup
         run: |
           echo "img_name=${IMG_NAME}" >> $GITHUB_OUTPUT
           echo "img_file=/tmp/${IMG_NAME}-image.tar" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v4
-      - uses: docker/metadata-action@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: docker/metadata-action@318604b99e75e41977312d83839a89be02ca4893 # v5.9.0
         id: meta
         with:
           images: ${{needs.setup.outputs.img_prefix}}${{steps.setup.outputs.img_name}}${{needs.setup.outputs.img_modifier}}
           flavor: latest=true
           tags: ${{needs.setup.outputs.img_dev_tag}}
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
         with:
@@ -379,7 +429,7 @@ jobs:
           build-args: ${{ needs.setup.outputs.version }}
           outputs: type=docker,dest=${{ steps.setup.outputs.img_file }}
       - name: Upload image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{steps.setup.outputs.img_name}}-image
           path: ${{ steps.setup.outputs.img_file }}
@@ -404,7 +454,7 @@ jobs:
   #         with:
   #           username: ${{ secrets.DOCKER_USERNAME }}
   #           password: ${{ secrets.DOCKER_PASSWORD }}
-  #       - uses: actions/download-artifact@v4
+  #       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
   #       - run: |
   #           set -eu
   #           for artifact in *; do
@@ -462,7 +512,12 @@ jobs:
       TEST_TIMEOUT_MINUTES: 10  # Timeout minutes for each test
       USE_MULTICLUSTER_OIDC_ENV: "true"
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: "Install required CLI tools"
         run: |
           set -eu
@@ -516,7 +571,7 @@ jobs:
           ./script/load-kind-image.sh httpd:2.4.65 kubeapps-ci kubeapps-ci-additional &&
           ./script/load-kind-image.sh registry:$DOCKER_REGISTRY_VERSION kubeapps-ci kubeapps-ci-additional
       - name: "Download docker images"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: /tmp/images
       - name: "Load CI images in the cluster"
@@ -543,7 +598,7 @@ jobs:
         continue-on-error: true
       - name: 'Upload Artifacts'
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: e2e_tests_${{ matrix.tests_group }}_reports
           path: integration/reports
@@ -558,6 +613,11 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - name: "Check local_e2e_tests matrix status"
         if: needs.local_e2e_tests.result != 'success'
         run: exit 1
@@ -577,7 +637,7 @@ jobs:
   #         with:
   #           username: ${{ secrets.DOCKER_USERNAME }}
   #           password: ${{ secrets.DOCKER_PASSWORD }}
-  #       - uses: actions/download-artifact@v4
+  #       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
   #       - run: |
   #           set -eu
   #           for artifact in *; do
@@ -611,7 +671,7 @@ jobs:
   #     if: needs.setup.outputs.running_on_main == 'true' || inputs.trigger_release
   #     runs-on: ubuntu-latest
   #     steps:
-  #       - uses: actions/checkout@v4
+  #       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
   #       - name: "Install CLI tools"
   #         env:
   #           GPG_KEY_PUBLIC: ${{ secrets.GPG_KEY_PUBLIC }}
@@ -669,7 +729,7 @@ jobs:
   #     if: inputs.trigger_release
   #     runs-on: ubuntu-latest
   #     steps:
-  #       - uses: actions/checkout@v4
+  #       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
   #       - name: "Install CLI tools"
   #         env:
   #           GPG_KEY_PUBLIC: ${{ secrets.GPG_KEY_PUBLIC }}
@@ -725,7 +785,7 @@ jobs:
   #       - GKE_STABLE_VERSION
   #     runs-on: ubuntu-latest
   #     steps:
-  #       - uses: actions/checkout@v4
+  #       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
   #       - run: |
   #           set -eu
   #           source ./script/lib/libcitools.sh

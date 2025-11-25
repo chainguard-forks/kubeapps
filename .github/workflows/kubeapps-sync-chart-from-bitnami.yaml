@@ -79,6 +79,11 @@ jobs:
       ssh_key_forked_charts_deploy_filename: ${{ steps.set-outputs.outputs.ssh_key_forked_charts_deploy_filename }}
       triggered_from_fork: ${{ steps.set-outputs.outputs.triggered_from_fork }}
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
       - name: Show GitHub event
         env:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
@@ -150,7 +155,12 @@ jobs:
       - setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: "Install CLI tools"
         env:
           GPG_KEY_PUBLIC: ${{ secrets.GPG_KEY_PUBLIC }}
@@ -163,7 +173,7 @@ jobs:
           installSemver ${SEMVER_VERSION}
           installGPGKey
       - name: "Install SSH key: Forked Charts Deploy Key"
-        uses: shimataro/ssh-key-action@v2
+        uses: step-security/ssh-key-action@ec66b77f1864b5e2b3c97f1747eb68f9e813cdc2 # v2.7.2
         with:
           key: ${{ secrets.SSH_KEY_FORKED_CHARTS_DEPLOY }}
           name: ${{ needs.setup.outputs.ssh_key_forked_charts_deploy_filename }}
