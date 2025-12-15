@@ -1,7 +1,7 @@
 # <img src="site/content/docs/latest/img/logo.svg" width="40" align="left"/> Kubeapps
 
 [![Main Pipeline](https://github.com/chainguard-forks/kubeapps/actions/workflows/kubeapps-main.yaml/badge.svg)](https://github.com/chainguard-forks/kubeapps/actions/workflows/kubeapps-main.yaml)
-[![CodeQL](https://github.com/vmware-tanzu/kubeapps/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/vmware-tanzu/kubeapps/actions/workflows/codeql-scheduled.yml)
+[![CodeQL](https://github.com/chainguard-forks/kubeapps/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/vmware-tanzu/kubeapps/actions/workflows/codeql-scheduled.yml)
 
 > [!IMPORTANT]
 > This is a supported replacement of the original `vmware-tanzu/kubeapps`
