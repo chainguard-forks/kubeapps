@@ -64,15 +64,8 @@ test("Rolls back an application", async ({ page }) => {
 
   // Use the built-in search function in monaco to find the text we are looking for
   // so that it get loaded in the DOM when using the toContainText assert
-  await page.locator(".values-editor div.modified").click({ button: "right" });
-  await page.locator("text=Command Palette").click();
-  await page.getByLabel("input").click();
-  await page.getByLabel("input").fill(">find");
-  await page
-    .locator("div")
-    .filter({ hasText: /^Find$/ })
-    .nth(1)
-    .click();
+  await page.locator(".values-editor").click();
+  await page.keyboard.press("Control+f");
   await page.getByPlaceholder("Find").fill("replicaCount: ");
   await expect(page.locator(".values-editor div.modified")).toContainText("replicaCount: 2");
 
