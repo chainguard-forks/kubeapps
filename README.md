@@ -4,22 +4,10 @@
 [![CodeQL](https://github.com/chainguard-forks/kubeapps/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/vmware-tanzu/kubeapps/actions/workflows/codeql-scheduled.yml)
 
 > [!IMPORTANT]
-> This is a supported replacement of the original `vmware-tanzu/kubeapps`
-> repository, which was archived in August of 2025. Further details in
-> [History and Status](#history-and-status).
-
-> Community contributions are not being accepted at this time. The documentation
-> has been carried over directly from the original repository and may not reflect
-> recent changes.
-
-> We will make a best-effort attempt to address security vulnerabilities, including CVEs in
-> dependencies and certain source code vulnerabilities when remediation can be achieved 
-> safely and with minimal risk. If mitigating a vulnerability would require extensive code 
-> changes (for example, adapting to a new API or significant refactoring), we will generally not 
-> make that change in order to avoid introducing regressions.
-
-> Interested in a CVE-free container image of this project? [Contact Chainguard](https://www.chainguard.dev/contact). 
-
+> The recommended upstream for Kubeapps is now the SAP‑maintained fork at https://github.com/SAP/kubeapps.
+> This repository will be archived and is being retained for visibility.
+> New and existing users should use the SAP fork.
+> If you are interested in a Chainguard image of SAP/kubeapps, please contact us at https://www.chainguard.dev/contact.
 
 ## History and Status
 
