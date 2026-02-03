@@ -17,7 +17,7 @@ Kubeapps was originally created by VMware Tanzu and published at
 The project was archived in August 2025 and forked by Chainguard in November 2025
 to [chainguard-forks/kubeapps](https://github.com/chainguard-forks/kubeapps).
 
-No feature work is planned.
+The Chainguard fork was archived February 2026. No further work for this fork is planned.
 
 ## Releases
 
